@@ -2,16 +2,23 @@ package com.finconsgroup.parco_macchine.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "grant_id")
@@ -20,9 +27,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Intervento> interventi;
 
-    public User(Long id, String nome, Grant grant, List<Intervento> interventi) {
+    public User(Long id, String nome, String password, Grant grant, List<Intervento> interventi) {
         this.id = id;
-        this.nome = nome;
+        this.username = nome;
+        this.password = password;
         this.grant = grant;
         this.interventi = interventi;
     }
@@ -38,12 +46,16 @@ public class User {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Grant getGrant() {
@@ -60,5 +72,35 @@ public class User {
 
     public void setInterventi(List<Intervento> interventi) {
         this.interventi = interventi;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> "ROLE_" + grant.getNome());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
     }
 }
