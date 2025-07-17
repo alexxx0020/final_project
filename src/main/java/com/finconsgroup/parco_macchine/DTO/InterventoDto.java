@@ -8,10 +8,10 @@ public class InterventoDto {
 
     private Long id;
     private Stato stato;
-    private List<SpecificaInterventoDto> specificaInterventiDtos;
-    private List<StoricoInterventoDto> storicoInterventi;
     private Integer macchina;
     private Integer user;
+    private List<SpecificaInterventoDto> specificaInterventiDtos;
+    private List<StoricoInterventoDto> storicoInterventi;
 
     public InterventoDto(Long id, Stato stato, List<SpecificaInterventoDto> specificaInterventiDtos, List<StoricoInterventoDto> storicoInterventi, Integer macchina, Integer user) {
         this.id = id;
